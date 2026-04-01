@@ -4,16 +4,85 @@
     <meta charset="UTF-8">
     <title>Square Parkour: Turbo</title>
     <style>
-        :root { --primary: #00ffcc; --bg: #1a1a1a; }
-        body { margin: 0; overflow: hidden; background: var(--bg); font-family: 'Courier New', Courier, monospace; color: white; }
-        canvas { display: block; background: #2c3e50; margin: 0 auto; border: 4px solid #333; }
-        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); z-index: 10; }
-        .hidden { display: none !important; }
-        .menu-card { background: #222; padding: 2rem; border-radius: 10px; border: 2px solid var(--primary); text-align: center; width: 350px; }
-        button { display: block; width: 100%; padding: 12px; margin: 10px 0; background: var(--primary); border: none; font-weight: bold; cursor: pointer; color: #000; text-transform: uppercase; transition: 0.1s; }
-        button:hover { background: #fff; transform: translateY(-2px); }
-        #game-ui { position: absolute; top: 20px; left: 20px; pointer-events: none; }
-        .controls-hint { font-size: 0.8rem; color: #888; margin-top: 10px; }
+        :root
+        {
+            --primary: #00ffcc;
+            --bg: #1a1a1a;
+        }
+        body
+        {
+            margin: 0;
+            overflow: hidden;
+            background: var(--bg);
+            font-family: 'Courier New', Courier, monospace;
+            color: white;
+        }
+        canvas
+        {
+            display: block;
+            background: #2c3e50;
+            margin: 0 auto;
+            border: 4px solid #333;
+        }
+        .overlay
+        {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.85);
+            z-index: 10;
+        }
+        .hidden
+        {
+            display: none !important;
+        }
+        .menu-card
+        {
+            background: #222;
+            padding: 2rem;
+            border-radius: 10px;
+            border: 2px solid var(--primary);
+            text-align: center;
+            width: 350px;
+        }
+        button
+        {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: var(--primary);
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            color: #000;
+            text-transform: uppercase;
+            transition: 0.1s;
+        }
+        button:hover
+        {
+            background: #fff;
+            transform: translateY(-2px);
+        }
+        #game-ui
+        {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            pointer-events: none;
+        }
+        .controls-hint
+        {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
