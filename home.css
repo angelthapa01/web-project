@@ -5,7 +5,7 @@ html {
 body {
     margin: 0;
     font-family: Manrope, sans-serif;
-    background: #fbe4ec; /* lighter + cleaner */
+    background: #fbe4ec;
 }
 
 /* TYPOGRAPHY */
@@ -16,8 +16,10 @@ h1, h2, h3 {
 h2 {
     font-size: 34px;
     margin-bottom: 25px;
-    color: white;
 }
+
+.logo h2 {
+    color: white; 
 
 /* LAYOUT */
 .container {
@@ -35,7 +37,6 @@ header {
     z-index: 1000;
     overflow: hidden;
     background: linear-gradient(to bottom, rgba(255,79,163,0.8), rgba(255,79,163,0)); 
-    /* pink fades to fully transparent, letting dinobg image show through */
     backdrop-filter: blur(6px);
 }
 
@@ -44,21 +45,16 @@ header {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: -1; /* behind header content */
+    z-index: -1; 
 }
 
 /* NAV LINKS */
-
-
-/* UNDERLINE ON HOVER */
-
-
 nav .nav-link {
     color: white;
     margin-left: 20px;
     text-decoration: none;
     font-weight: 600;
-    transition: all 0.3s ease; /* smooth hover effect */
+    transition: all 0.3s ease; 
 }
 
 nav .nav-link:hover {
@@ -66,11 +62,11 @@ nav .nav-link:hover {
 }
 
 .learnings h2 {
-    color: #db2777; /* pink-purple */
+    color: #db2777;
 }
 
 .members h2 {
-    color: #7e22ce; /* deeper purple */
+    color: #7e22ce;
 }
 
 /* NAV WRAP FIXES SPACING */
@@ -113,19 +109,19 @@ nav .nav-link:hover {
 
 /* SHAPES CONTAINER */
 .shapes {
-    position: fixed; /* fixed so they float throughout the page */
+    position: fixed;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
-    z-index: -1; /* behind all elements */
-    pointer-events: none; /* clicks go through */
+    z-index: -1; 
+    pointer-events: none; 
     overflow: hidden;
 }
 
 /* SHAPE BASE STYLING */
 .shape {
-    width: 150px;  /* smaller circles */
+    width: 150px; 
     height: 150px;
     background: #d291ff;
     border-radius: 50%;
@@ -158,7 +154,7 @@ section {
 
 .card:hover {
     transform: scale(1.08);
-    background: #f3e8ff; /* light lavender */
+    background: #f3e8ff; 
 }
 
 /* MEMBERS */
@@ -275,6 +271,6 @@ footer {
 }
 
 #topBtn:hover {
-    background: #a855f7; /* purple */
+    background: #a855f7; 
     transform: scale(1.1);
 }
