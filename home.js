@@ -9,12 +9,22 @@ topBtn.onclick = () => {
     window.scrollTo({
         top: 0,
         behavior: "smooth"
+<<<<<<< HEAD
     }); 
 };
 
 //Selecting all the shapes
 const shapes = document.querySelectorAll('.shape');
 
+=======
+    });
+};
+
+// Select all 3 shapes
+const shapes = document.querySelectorAll('.shape');
+
+// Initialize each shape
+>>>>>>> fae72925699272bcaf20d97666c346f74eac0025
 shapes.forEach(shape => {
     let x = Math.random() * window.innerWidth;
     let y = Math.random() * window.innerHeight;

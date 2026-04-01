@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Square Parkour: Turbo</title>
+    <style>
+        :root { --primary: #00ffcc; --bg: #1a1a1a; }
+        body { margin: 0; overflow: hidden; background: var(--bg); font-family: 'Courier New', Courier, monospace; color: white; }
+        canvas { display: block; background: #2c3e50; margin: 0 auto; border: 4px solid #333; }
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); z-index: 10; }
+        .hidden { display: none !important; }
+        .menu-card { background: #222; padding: 2rem; border-radius: 10px; border: 2px solid var(--primary); text-align: center; width: 350px; }
+        button { display: block; width: 100%; padding: 12px; margin: 10px 0; background: var(--primary); border: none; font-weight: bold; cursor: pointer; color: #000; text-transform: uppercase; transition: 0.1s; }
+        button:hover { background: #fff; transform: translateY(-2px); }
+        #game-ui { position: absolute; top: 20px; left: 20px; pointer-events: none; }
+        .controls-hint { font-size: 0.8rem; color: #888; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<nav>
+  <a href="index.html">Home</a>
+  <a href="contact.html">Contact</a>
+</nav>
+<div id="game-ui" class="hidden">
+    <h2 id="score">Distance: 0m</h2>
+    <p id="jump-status">Jumps: 2/2</p>
+</div>
+
+<div id="main-menu" class="overlay">
+    <div class="menu-card">
+        <h1 style="color: var(--primary)">TURBO PARKOUR</h1>
+        <button onclick="startGame()">START GAME</button>
+        <button onclick="showScreen('settings')">DIFFICULTY</button>
+        <div class="controls-hint">A/D to Start/Change Direction<br>SPACE to Double Jump</div>
+    </div>
+</div>
+
+<div id="settings" class="overlay hidden">
+    <div class="menu-card">
+        <h2>Settings</h2>
+        <label>Base Speed</label>
+        <input type="range" id="speed-slider" min="4" max="12" value="7" style="width:100%">
+        <label>Gravity</label>
+        <input type="range" id="gravity-slider" min="5" max="15" value="8" style="width:100%">
+        <button onclick="showScreen('main-menu')">SAVE</button>
+    </div>
+</div>
+
+<canvas id="gameCanvas"></canvas>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = 800;
+canvas.height = 450;
+
+let currentState = 'MENU';
+let cameraX = 0;
+let moveSpeed = 7;
+let gravityValue = 0.8;
+let platforms = [];
+
+const player = {
+    x: 100, y: 300, w: 35, h: 35,
+    vx: 0, vy: 0,
+    grounded: false,
+    jumpForce: -13,
+    jumps: 0,
+    maxJumps: 2
+};
+
+function generateLevel() {
+    platforms = [
+        { x: 0, y: 400, w: 1000, h: 50, type: 'floor' },
+        { x: 500, y: 300, w: 200, h: 30, type: 'block' },
+        { x: 800, y: 220, w: 200, h: 30, type: 'block' }
+    ];
+    
+    for(let i=0; i<100; i++)
+    {
+        let last = platforms[platforms.length-1];
+        let isSpike = Math.random() < 0.25;
+        platforms.push({
+            x: last.x + 250 + Math.random() * 150,
+            y: 150 + Math.random() * 220,
+            w: isSpike ? 40 : 120 + Math.random() * 100,
+            h: isSpike ? 40 : 30,
+            type: isSpike ? 'spike' : 'block'
+        });
+    }
+}
+
+function showScreen(id)
+{
+    document.querySelectorAll('.overlay').forEach(el => el.classList.add('hidden'));
+    const target = document.getElementById(id);
+    if(target) target.classList.remove('hidden');
+}
+
+function startGame()
+{
+    moveSpeed = parseInt(document.getElementById('speed-slider').value);
+    gravityValue = parseInt(document.getElementById('gravity-slider').value) / 10;
+    
+    player.x = 100; player.y = 300; 
+    player.vx = 0; player.vy = 0;
+    player.jumps = player.maxJumps;
+
+    generateLevel();
+    currentState = 'PLAYING';
+    showScreen('none');
+    document.getElementById('game-ui').classList.remove('hidden');
+    gameLoop();
+}
+
+function update()
+{
+    if(currentState !== 'PLAYING') return;
+
+    player.x += player.vx;
+
+    player.vy += gravityValue;
+    player.y += player.vy;
+
+    if(player.y + player.h > canvas.height + 200) gameOver();
+
+    player.grounded = false;
+
+    platforms.forEach(p => {
+        if(player.x < p.x + p.w && player.x + player.w > p.x && player.y < p.y + p.h && player.y + player.h > p.y)
+            {
+            
+            if(p.type === 'spike')
+            {
+                gameOver();
+            }
+            else
+            {
+                let overlapX = Math.min(player.x + player.w - p.x, p.x + p.w - player.x);
+                let overlapY = Math.min(player.y + player.h - p.y, p.y + p.h - player.y);
+
+                if(overlapY < overlapX)
+                {
+                    if(player.vy > 0 && player.y < p.y)
+                    { 
+                        player.y = p.y - player.h;
+                        player.vy = 0;
+                        player.grounded = true;
+                        player.jumps = player.maxJumps;
+                    }
+                    else if (player.vy < 0)
+                    { 
+                        player.y = p.y + p.h;
+                        player.vy = 0;
+                    }
+                }
+                else
+                { 
+                    if(player.vx > 0) player.x = p.x - player.w;
+                    else if(player.vx < 0) player.x = p.x + p.w;
+                }
+            }
+        }
+    });
+
+    cameraX = player.x - 250;
+    document.getElementById('score').innerText = `Distance: ${Math.floor(player.x/10)}m`;
+    document.getElementById('jump-status').innerText = `Jumps: ${player.jumps}/${player.maxJumps}`;
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(-cameraX, 0);
+
+    platforms.forEach(p => {
+        if (p.type === 'spike') {
+            ctx.fillStyle = '#ff4444';
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y + p.h); ctx.lineTo(p.x + p.w/2, p.y); ctx.lineTo(p.x + p.w, p.y + p.h);
+            ctx.fill();
+        } else {
+            ctx.fillStyle = p.type === 'floor' ? '#333' : '#8B4513';
+            ctx.fillRect(p.x, p.y, p.w, p.h);
+            ctx.strokeStyle = '#555';
+            ctx.strokeRect(p.x, p.y, p.w, p.h);
+        }
+    });
+
+    ctx.fillStyle = '#00ffcc';
+ 
+    if(player.jumps === 0) ctx.shadowBlur = 15, ctx.shadowColor = '#00ffcc';
+    ctx.fillRect(player.x, player.y, player.w, player.h);
+    ctx.shadowBlur = 0;
+
+    ctx.fillStyle = 'white';
+    let eyeOffset = player.vx >= 0 ? 22 : 5;
+    ctx.fillRect(player.x + eyeOffset, player.y + 8, 8, 8);
+
+    ctx.restore();
+}
+
+function gameOver()
+{
+    currentState = 'GAMEOVER';
+    document.getElementById('main-menu').querySelector('h1').innerText = "CRASHED";
+    document.getElementById('main-menu').querySelector('button').innerText = "REBOOT";
+    showScreen('main-menu');
+}
+
+function gameLoop()
+{
+    if(currentState === 'PLAYING')
+    {
+        update();
+        draw();
+        requestAnimationFrame(gameLoop);
+    }
+}
+
+window.addEventListener('keydown', (e) => {
+    if(e.code === 'KeyD' || e.code === 'ArrowRight') player.vx = moveSpeed;
+    if(e.code === 'KeyA' || e.code === 'ArrowLeft') player.vx = -moveSpeed;
+
+    if(e.code === 'Space')
+    {
+        if(player.jumps > 0)
+        {
+            player.vy = player.jumpForce;
+            player.jumps--;
+            player.grounded = false;
+        }
+    }
+});
+
+draw();
+</script>
+</body>
+</html>

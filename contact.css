@@ -1,92 +1,121 @@
+/* BODY */
 body {
   margin: 0;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   background: #f5c6d6;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-.navbar {
-  background: #ff4da6;
-  padding: 10px;
-  text-align: center;
 }
 
+/* NAVBAR (TOP RIGHT) */
+.navbar {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+}
+
+/* NAV LINKS */
 .navbar a {
   color: white;
-  margin: 10px;
+  margin-left: 15px;
   text-decoration: none;
   font-weight: bold;
+  background: #ff4da6;
+  padding: 8px 15px;
+  border-radius: 8px;
+  transition: 0.3s;
 }
 
+/* HOVER */
 .navbar a:hover {
-  text-decoration: underline;
+  background: #e60073;
+  transform: scale(1.05);
 }
-/* Card */
+
+/* CONTAINER (CENTERED CARD) */
 .container {
   background: #f2f2f2;
   padding: 30px;
   border-radius: 20px;
   width: 350px;
+  margin: 100px auto;
+
+  /* animation */
+  animation: fadeSlide 0.6s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-/* Title */
+/* ANIMATION */
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* TITLE */
 h1 {
   text-align: center;
   color: #ff4da6;
 }
 
+/* SUBTITLE */
 .subtitle {
   text-align: center;
   margin-bottom: 20px;
 }
 
-/* FORM GROUP (fix alignment here) */
+/* FORM GROUP */
 .form-group {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;   /* KEY FIX */
   margin-bottom: 15px;
 }
 
-/* Labels */
+/* LABEL */
 label {
   margin-bottom: 5px;
   font-weight: bold;
 }
 
-/* Inputs */
+/* INPUTS */
 input, textarea {
   width: 100%;
   padding: 10px;
   border: 2px solid #f4a6c1;
   border-radius: 10px;
   outline: none;
+  transition: 0.3s;
 }
 
-/* Focus */
+/* INPUT FOCUS */
 input:focus, textarea:focus {
   border-color: #ff4da6;
+  box-shadow: 0 0 8px rgba(255, 77, 166, 0.3);
 }
 
-/* Button */
+/* BUTTON */
 button {
   width: 100%;
   padding: 12px;
-  background: #ff4da6;
+  background: linear-gradient(to right, #ff4da6, #ff3385);
   color: white;
   border: none;
   border-radius: 10px;
   font-size: 16px;
   cursor: pointer;
+  transition: 0.3s;
 }
 
+/* BUTTON HOVER */
 button:hover {
-  background: #e60073;
+  transform: scale(1.05);
+  opacity: 0.9;
 }
 
-/* Error */
+/* ERROR */
 .error {
   color: red;
   font-size: 12px;
